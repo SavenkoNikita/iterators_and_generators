@@ -10,48 +10,50 @@ class FlatIterator:
     """
 
     def __init__(self, list_of_list):
+        #####
         self.list_of_list = list_of_list
+        #####
 
     def __iter__(self):
-        self.i = -1
-        # self.next_list = self.list_of_list[self.i + 1]
-        self.results = []
-        # print(self.results)
+        #####
+
+        #####
         return self
 
     def __next__(self):
+        #####
         if len(self.list_of_list) == 0:
+            print('В списке не осталось вложенных списков')
             raise StopIteration
         else:
-            # self.i = -1
-            # self.result = []
-            for lists in self.list_of_list:
-                self.i += 1
-                for elem in lists:
-                    self.results.append(elem)
-
-            # print(self.next_list)
-            # self.next_list = self.list_of_list[self.i + 1]
-            # self.list_of_list.pop(self.i)
-        print(self.results)
-        return self.results
+            if len(self.list_of_list[0]) > 0:
+                item = self.list_of_list[0].pop(0)
+            elif len(self.list_of_list[0][0]) == 0:
+                print('Во вложенных списках не осталось элементов')
+                raise StopIteration
+            else:
+                item = self.list_of_list[1].pop(0)
+                self.list_of_list.pop(0)
+        print(self.list_of_list)
+        #####
+        return item
 
 
 def test_1():
+
     list_of_lists_1 = [
         ['a', 'b', 'c'],
         ['d', 'e', 'f', 'h', False],
         [1, 2, None]
     ]
 
-    print(type(list_of_lists_1))
-    iter_list = FlatIterator(list_of_lists_1)
-    print(type(iter_list))
-
     for flat_iterator_item, check_item in zip(
             FlatIterator(list_of_lists_1),
             ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
     ):
+        # print(f'flat_iterator_item = {flat_iterator_item}, {type(flat_iterator_item)}')
+        # print(f'check_item = {check_item}, {type(check_item)}')
+        # print('\n')
         assert flat_iterator_item == check_item
 
     assert list(FlatIterator(list_of_lists_1)) == ['a', 'b', 'c', 'd', 'e', 'f', 'h', False, 1, 2, None]
